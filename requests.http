@@ -1,0 +1,26 @@
+### 1. Creează un user de sacrificiu
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "user_victime",
+  "password": "parola123",
+  "role": "CLIENT"
+}
+
+### 2. Creează un device asociat (ÎNLOCUIEȘTE <UUID_AICI> cu id-ul returnat la pasul 1!)
+POST http://localhost:8081/devices
+Content-Type: application/json
+
+{
+  "description": "Senzor care va fi sters",
+  "address": "Strada Testelor 99",
+  "maxHourlyEnergyConsumption": 5.5,
+  "userId": "5b31536c-f5c6-496e-9f4f-105ab96babaa"
+}
+
+### 3. Șterge userul (ÎNLOCUIEȘTE <UUID_AICI> cu același id de la pasul 1!)
+DELETE http://localhost:8080/users/<UUID_AICI>
+
+### 4. Verifică dacă device-ul a dispărut din Device Service
+GET http://localhost:8081/devices

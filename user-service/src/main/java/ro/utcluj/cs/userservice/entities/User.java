@@ -13,7 +13,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = "uuid2")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "username", nullable = false, unique = true)
@@ -25,7 +25,7 @@ public class User implements Serializable {
     @Column(name = "role", nullable = false)
     private String role;
 
-    public User() {} // Required empty constructor[cite: 43]
+    public User() {}
 
     public User(String username, String password, String role) {
         this.username = username;

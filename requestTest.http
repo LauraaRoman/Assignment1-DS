@@ -1,0 +1,28 @@
+### 1. Creare cont nou (Public)
+POST http://localhost/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser4",
+  "password": "testpassword",
+  "role": "CLIENT"
+}
+
+### 2. Autentificare (Public - Copiază token-ul JWT din răspuns)
+POST http://localhost/auth/login?username=testuser4&password=testpassword
+Accept: application/json
+
+### 3. Testare securitate (Fără token - Trebuie să returneze 403 Forbidden)
+GET http://localhost/users
+Accept: application/json
+
+### 4. Accesare User Service (Cu token - Trebuie să returneze 200 OK)
+# Înlocuiește <TOKEN> cu textul lung primit la pasul 2
+GET http://localhost/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlcjQiLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzkyODY3NjUwLCJleHAiOjE3OTI5MDM2NTB9.qg1StnwMKQg2d20Wg-Lx09loEjfaBbUrIj_OtvO7grU
+Accept: application/json
+
+### 5. Accesare Device Service (Cu token - Trebuie să returneze 200 OK)
+GET http://localhost/auth/validate
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlcjQiLCJyb2xlIjoiQ0xJRU5UIiwiaWF0IjoxNzkyODY3NjUwLCJleHAiOjE3OTI5MDM2NTB9.qg1StnwMKQg2d20Wg-Lx09loEjfaBbUrIj_OtvO7grU
+
