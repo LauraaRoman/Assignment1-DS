@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram id="FCx_CAQbC2FOvImJ_bu6" name="Page-1">
-    <mxGraphModel dx="1765" dy="661" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="3409" dy="1277" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -13,8 +13,8 @@
         <mxCell id="12" parent="11" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontColor=#000000;fontSize=11;" value="&lt;b&gt;Frontend library&lt;/b&gt;&lt;br&gt;React" vertex="1">
           <mxGeometry height="70" width="130.00000000000003" x="10.000000000000004" y="94" as="geometry" />
         </mxCell>
-        <mxCell id="20" parent="1" style="swimlane;startSize=48;fillColor=#E6E6E6;strokeColor=#666666;fontColor=#333333;fontSize=11;fontStyle=1;align=left;spacingLeft=8;arcSize=2;shadow=1;" value="                                                                                                                «device» &#xa;                                                                                                            Gazdă Docker&#xa;                                                                                 «execution environment»   Docker Engine" vertex="1">
-          <mxGeometry height="860" width="730" x="410" y="20" as="geometry" />
+        <mxCell id="20" parent="1" style="swimlane;startSize=48;fillColor=#E6E6E6;strokeColor=#666666;fontColor=#333333;fontSize=11;fontStyle=1;align=left;spacingLeft=8;arcSize=2;shadow=1;" value="  &#xa;                                                                                                    «execution environment»   &#xa;                                                                                                            Docker Engine" vertex="1">
+          <mxGeometry height="850" width="750" x="390" y="25" as="geometry" />
         </mxCell>
         <mxCell id="40" parent="20" style="swimlane;startSize=40;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#333333;fontSize=10;fontStyle=1;align=left;spacingLeft=6;arcSize=4;shadow=1;" value="                                «container»&#xa;                                    frontend" vertex="1">
           <mxGeometry height="210" width="240" x="20" y="560" as="geometry" />
@@ -122,14 +122,14 @@
         <mxCell id="90" parent="1" style="swimlane;startSize=30;fillColor=#E6E6E6;strokeColor=#999999;fontColor=#333333;fontSize=11;fontStyle=1;align=left;spacingLeft=8;arcSize=2;" value="                            MySQL 8.0" vertex="1">
           <mxGeometry height="820" width="220" x="1390" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="91" parent="90" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=10;" value="&lt;b&gt;auth_db&lt;/b&gt;&lt;br&gt;Credential Database&lt;br&gt;host port 3309" vertex="1">
+        <mxCell id="93" parent="90" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=10;" value="&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;device_db&lt;/b&gt;&lt;br&gt;Device Database&lt;br&gt;host port 3307" vertex="1">
+          <mxGeometry height="110" width="160" x="40" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="91" parent="90" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=10;" value="&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;auth_db&lt;/b&gt;&lt;br&gt;Credential Database&lt;br&gt;host port 3309" vertex="1">
           <mxGeometry height="110" width="160" x="40" y="190" as="geometry" />
         </mxCell>
-        <mxCell id="92" parent="90" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=10;" value="&lt;b&gt;user_db&lt;/b&gt;&lt;br&gt;User Database&lt;br&gt;host port 3308" vertex="1">
+        <mxCell id="92" parent="90" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=10;" value="&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(51, 51, 51), rgb(193, 193, 193));&quot;&gt;user_db&lt;/b&gt;&lt;/div&gt;&lt;/b&gt;User Database&lt;br&gt;host port 3308" vertex="1">
           <mxGeometry height="110" width="160" x="40" y="420" as="geometry" />
-        </mxCell>
-        <mxCell id="93" parent="90" style="shape=mxgraph.flowchart.database;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=10;" value="&lt;b&gt;device_db&lt;/b&gt;&lt;br&gt;Device Database&lt;br&gt;host port 3307" vertex="1">
-          <mxGeometry height="110" width="160" x="40" y="640" as="geometry" />
         </mxCell>
         <mxCell id="100" edge="1" parent="1" source="11" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#6c8ebf;fontColor=#333333;fontSize=9;fontStyle=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.35;entryDx=0;entryDy=0;" target="30" value="HTTP :80&lt;br&gt;pages, REST API + JWT">
           <mxGeometry relative="1" as="geometry" />

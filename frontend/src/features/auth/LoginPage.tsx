@@ -17,7 +17,7 @@ export default function LoginPage() {
     setError(null)
     setLoading(true)
     try {
-      const res = await api.post('/auth/login', null, { params: { username, password } })
+      const res = await api.post('/auth/login', { username, password })
       localStorage.setItem('token', res.data)
       navigate('/')
     } catch {

@@ -115,6 +115,15 @@ services:
     networks:
       - utcn-network
 
+  # ================= Frontend =================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    networks:
+      - utcn-network
+
   # ================= API Gateway =================
   reverse-proxy:
     image: nginx:latest
@@ -124,6 +133,7 @@ services:
     ports:
       - "80:80"
     depends_on:
+      - frontend
       - user-service
       - device-service
       - auth-service

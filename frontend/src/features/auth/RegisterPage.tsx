@@ -18,7 +18,7 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       await api.post('/auth/register', { username, password, role: 'CLIENT' })
-      const loginRes = await api.post('/auth/login', null, { params: { username, password } })
+      const loginRes = await api.post('/auth/login', { username, password })
       const token = loginRes.data
       await api.post('/users', { username, password, role: 'CLIENT' }, {
         headers: { Authorization: `Bearer ${token}` }

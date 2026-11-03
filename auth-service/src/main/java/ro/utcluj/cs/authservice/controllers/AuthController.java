@@ -75,10 +75,15 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<String> login(
-            @Parameter(description = "Username", required = true, example = "admin") @RequestParam String username,
-            @Parameter(description = "Password", required = true, example = "admin123") @RequestParam String password) {
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Login credentials",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = LoginRequest.class),
+                            examples = @ExampleObject(value = """
+                                    {"username":"admin","password":"admin123"}""")))
+            @RequestBody LoginRequest request) {
         try {
-            return ResponseEntity.ok(authService.login(username, password));
+            return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
