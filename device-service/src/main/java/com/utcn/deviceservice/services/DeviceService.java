@@ -5,6 +5,8 @@ import com.utcn.deviceservice.dtos.DeviceDTO;
 import com.utcn.deviceservice.dtos.DeviceInsertDTO;
 import com.utcn.deviceservice.dtos.builders.DeviceBuilder;
 import com.utcn.deviceservice.entities.Device;
+import com.utcn.deviceservice.entities.UserReference;
+import com.utcn.deviceservice.messaging.SyncPublisher;
 import com.utcn.deviceservice.repositories.DeviceRepository;
 import com.utcn.deviceservice.repositories.UserReferenceRepository;
 import org.springframework.stereotype.Service;
@@ -18,19 +20,19 @@ public class DeviceService {
 
     private final DeviceRepository deviceRepository;
     private final UserReferenceRepository userReferenceRepository;
+    private final SyncPublisher syncPublisher;
 
-    // Am scos RestTemplate din constructor, nu mai avem nevoie de el aici
-    public DeviceService(DeviceRepository deviceRepository, UserReferenceRepository userReferenceRepository) {
+    public DeviceService(DeviceRepository deviceRepository,
+                         UserReferenceRepository userReferenceRepository,
+                         SyncPublisher syncPublisher) {
         this.deviceRepository = deviceRepository;
         this.userReferenceRepository = userReferenceRepository;
+        this.syncPublisher = syncPublisher;
     }
 
     private void validateUserExists(UUID userId) {
         if (!userReferenceRepository.existsById(userId)) {
-            // În loc să aruncăm eroarea 404, sincronizăm/salvăm automat utilizatorul
-            // în tabela locală a microserviciului de dispozitive.
-            com.utcn.deviceservice.entities.UserReference missingUser = new com.utcn.deviceservice.entities.UserReference(userId);
-            userReferenceRepository.save(missingUser);
+            userReferenceRepository.save(new UserReference(userId));
         }
     }
 
@@ -39,6 +41,10 @@ public class DeviceService {
 
         Device device = DeviceBuilder.toEntity(deviceDTO);
         device = deviceRepository.save(device);
+
+        syncPublisher.publishDeviceSync(device.getId(), device.getUserId(),
+                device.getMaxHourlyEnergyConsumption());
+
         return DeviceBuilder.toDeviceDTO(device);
     }
 
@@ -74,6 +80,11 @@ public class DeviceService {
         existingDevice.setUserId(deviceDTO.getUserId());
 
         existingDevice = deviceRepository.save(existingDevice);
+
+        // Re-sync so monitoring-service gets updated max limit
+        syncPublisher.publishDeviceSync(existingDevice.getId(), existingDevice.getUserId(),
+                existingDevice.getMaxHourlyEnergyConsumption());
+
         return DeviceBuilder.toDeviceDTO(existingDevice);
     }
 
@@ -84,7 +95,7 @@ public class DeviceService {
     }
 
     public void deleteDevicesByUserId(UUID userId) {
-       List<Device> devices = deviceRepository.findByUserId(userId);
+        List<Device> devices = deviceRepository.findByUserId(userId);
         deviceRepository.deleteAll(devices);
     }
 }

@@ -7,6 +7,7 @@ import LoginPage from '../features/auth/LoginPage'
 import RegisterPage from '../features/auth/RegisterPage'
 import AdminDevicesPage from '../features/devices/AdminDevicesPage'
 import ClientDevicesPage from '../features/devices/ClientDevicesPage'
+import EnergyChartPage from '../features/monitoring/EnergyChartPage'
 import UsersPage from '../features/users/UsersPage'
 
 function getRole(): string {
@@ -23,13 +24,18 @@ function AuthLayout() {
   const role = getRole()
   const navigate = useNavigate()
   const location = useLocation()
+  const isAdmin = role === 'ADMIN'
 
   if (!role) return <Navigate to="/login" replace />
-
-  const isAdmin = role === 'ADMIN'
   const tabs = isAdmin
-    ? [{ label: 'Users', path: '/users' }, { label: 'Devices', path: '/devices' }]
-    : [{ label: 'My Devices', path: '/devices' }]
+    ? [
+        { label: 'Users', path: '/users' },
+        { label: 'Devices', path: '/devices' },
+      ]
+    : [
+        { label: 'My Devices', path: '/devices' },
+        { label: 'Energy', path: '/energy' },
+      ]
 
   const currentTab = Math.max(0, tabs.findIndex(t => location.pathname.startsWith(t.path)))
 
@@ -87,9 +93,11 @@ function AuthLayout() {
         <Routes>
           {isAdmin && <Route path="/users" element={<UsersPage />} />}
           <Route path="/devices" element={isAdmin ? <AdminDevicesPage /> : <ClientDevicesPage />} />
+          {!isAdmin && <Route path="/energy" element={<EnergyChartPage />} />}
           <Route path="*" element={<Navigate to={isAdmin ? '/users' : '/devices'} replace />} />
         </Routes>
       </Container>
+
     </>
   )
 }

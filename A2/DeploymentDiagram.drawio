@@ -1,0 +1,175 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Deployment Diagram" id="deployment-a2">
+    <mxGraphModel dx="2452" dy="2588" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="user" parent="1" style="shape=mxgraph.cisco.computers_and_peripherals.pc;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;align=center;verticalLabelPosition=bottom;verticalAlign=top;" value="&lt;b&gt;User&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="30" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="nginx-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;reverse-proxy" vertex="1">
+          <mxGeometry height="160" width="220" x="200" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="nginx-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;NGINX&lt;/b&gt;&lt;br&gt;API Gateway&lt;br&gt;:80 (internal)" vertex="1">
+          <mxGeometry height="70" width="170" x="225" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="fe-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;frontend" vertex="1">
+          <mxGeometry height="160" width="220" x="190" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="fe-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;React App&lt;/b&gt;&lt;br&gt;Vite + MUI&lt;br&gt;:3000 (internal)" vertex="1">
+          <mxGeometry height="70" width="170" x="225" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="auth-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;auth-service" vertex="1">
+          <mxGeometry height="180" width="220" x="665" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="auth-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;Auth Service&lt;/b&gt;&lt;br&gt;Spring Boot&lt;br&gt;JWT (10h)&lt;br&gt;:8082" vertex="1">
+          <mxGeometry height="90" width="170" x="700" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="auth-db-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;auth-db" vertex="1">
+          <mxGeometry height="160" width="220" x="1120" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="auth-db-mod" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;auth_db&lt;/b&gt;&lt;br&gt;MySQL 8.0&lt;br&gt;:3306" vertex="1">
+          <mxGeometry height="70" width="110" x="1185" y="485" as="geometry" />
+        </mxCell>
+        <mxCell id="user-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;user-service" vertex="1">
+          <mxGeometry height="180" width="220" x="665" y="-50" as="geometry" />
+        </mxCell>
+        <mxCell id="user-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;User Service&lt;/b&gt;&lt;br&gt;Spring Boot&lt;br&gt;ADMIN / CLIENT&lt;br&gt;:8080" vertex="1">
+          <mxGeometry height="90" width="170" x="700" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="user-db-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;user-db" vertex="1">
+          <mxGeometry height="160" width="220" x="1110" y="-50" as="geometry" />
+        </mxCell>
+        <mxCell id="dev-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;device-service" vertex="1">
+          <mxGeometry height="180" width="220" x="660" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="dev-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;Device Service&lt;/b&gt;&lt;br&gt;Spring Boot&lt;br&gt;Swagger UI&lt;br&gt;:8081" vertex="1">
+          <mxGeometry height="90" width="170" x="700" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="dev-db-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;device-db" vertex="1">
+          <mxGeometry height="160" width="220" x="1110" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="rmq-sync-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#FFFFFF;strokeColor=#d6b656;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&lt;&lt;docker&gt;&gt;&lt;/b&gt;&lt;br&gt;rabbitmq-sync" vertex="1">
+          <mxGeometry height="765" width="280" x="1660" y="-30" as="geometry" />
+        </mxCell>
+        <mxCell id="iNjsMLeeS4e0NwZ715iP-4" parent="1" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#E5DFD3;shape=mxgraph.archimate4.role;" value="" vertex="1">
+          <mxGeometry height="35" width="160" x="1740" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="iNjsMLeeS4e0NwZ715iP-5" parent="1" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#E5DFD3;shape=mxgraph.archimate4.role;" value="" vertex="1">
+          <mxGeometry height="45" width="140" x="1750" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="iNjsMLeeS4e0NwZ715iP-3" parent="1" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#E5DFD3;shape=mxgraph.archimate4.role;" value="" vertex="1">
+          <mxGeometry height="35" width="180" x="1730" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="rmq-sync-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#d6b656;fontColor=#333333;" value="&lt;b&gt;sync.exchange&lt;/b&gt;&lt;br&gt;FanoutExchange&lt;br&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;sync.queue.device-service&lt;br&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;sync.queue.monitoring-service&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;sync.queue.auth-service&amp;nbsp;&lt;br&gt;:5672 / mgmt :15672&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="450" width="200" x="1720" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="rmq-data-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;rabbitmq-data" vertex="1">
+          <mxGeometry height="200" width="250" x="537" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="iNjsMLeeS4e0NwZ715iP-6" parent="1" style="html=1;outlineConnect=0;whiteSpace=wrap;fillColor=#E5DFD3;shape=mxgraph.archimate4.role;" value="" vertex="1">
+          <mxGeometry height="35" width="150" x="590" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="rmq-data-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6c8ebf;fontColor=#333333;" value="&lt;b&gt;device.data.exchange&lt;/b&gt;&lt;br&gt;FanoutExchange&lt;br&gt;device.data.queue&lt;br&gt;:5673 / mgmt :15673" vertex="1">
+          <mxGeometry height="90" width="200" x="562" y="970" as="geometry" />
+        </mxCell>
+        <mxCell id="mon-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;monitoring-service" vertex="1">
+          <mxGeometry height="180" width="220" x="660" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="mon-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;Monitoring Service&lt;/b&gt;&lt;br&gt;Spring Boot&lt;br&gt;REST :8083" vertex="1">
+          <mxGeometry height="90" width="170" x="690" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="mon-db-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#ffffff;strokeColor=#333333;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&amp;lt;docker&amp;gt;&lt;/b&gt;&lt;br&gt;monitoring-db" vertex="1">
+          <mxGeometry height="160" width="220" x="1130" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="mon-db-mod" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;monitoring_db&lt;/b&gt;&lt;br&gt;MySQL 8.0&lt;br&gt;:3306" vertex="1">
+          <mxGeometry height="70" width="110" x="1200" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="sim-box" parent="1" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;fillColor=#FFFFFF;strokeColor=#b85450;fontColor=#333333;verticalAlign=top;align=center;spacingTop=10;" value="&lt;b&gt;&lt;&lt;standalone&gt;&gt;&lt;/b&gt;&lt;br&gt;simulator" vertex="1">
+          <mxGeometry height="230" width="220" x="527" y="1200" as="geometry" />
+        </mxCell>
+        <mxCell id="sim-mod" parent="1" style="shape=module;align=center;verticalAlign=top;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#b85450;fontColor=#333333;" value="&lt;b&gt;Simulator&lt;/b&gt;&lt;br&gt;Spring Boot JAR&lt;br&gt;@Scheduled 10 min&lt;br&gt;&lt;timestamp, device_id,&lt;br&gt;measurement_value&gt;" vertex="1">
+          <mxGeometry height="120" width="170" x="562" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="user" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="nginx-box" value=":8888 (HTTP)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="nginx-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="fe-mod" value="/ → :3000">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="nginx-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="auth-mod" value="/auth → :8082">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="nginx-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="user-mod" value="/users → :8080">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="nginx-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="dev-mod" value="/devices → :8081">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="nginx-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="mon-mod" value="/monitoring → :8083">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="auth-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="auth-db-mod" value="3306">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="user-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="user-db-mod" value="3306">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="dev-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="dev-db-mod" value="3306">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="mon-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#333333;fontColor=#333333;" target="mon-db-mod" value="3306">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="user-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#d6b656;fontColor=#333333;edgeStyle=orthogonalEdgeStyle;fillColor=#FFCC99;" target="rmq-sync-mod" value="publish USER sync">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="785" y="160" />
+              <mxPoint x="1820" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="dev-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#d6b656;fontColor=#333333;edgeStyle=orthogonalEdgeStyle;" target="rmq-sync-mod" value="publish DEVICE sync">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="785" y="380" />
+              <mxPoint x="1295" y="380" />
+              <mxPoint x="1295" y="375" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" edge="1" parent="1" source="rmq-sync-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#6c8ebf;fontColor=#333333;edgeStyle=orthogonalEdgeStyle;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="mon-mod" value="consume DEVICE sync">
+          <mxGeometry relative="1" x="0.1396" as="geometry">
+            <Array as="points">
+              <mxPoint x="1820" y="820" />
+              <mxPoint x="775" y="820" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="sim-mod" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;strokeColor=#b85450;fontColor=#333333;" target="rmq-data-mod" value="publish measurements :5673">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" edge="1" parent="1" source="rmq-data-mod" style="endArrow=open;endFill=1;html=1;rounded=0;dashed=1;strokeColor=#6c8ebf;fontColor=#333333;" target="mon-mod" value="consume measurements">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dev-db-mod" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;device_db&lt;/b&gt;&lt;br&gt;MySQL 8.0&lt;br&gt;:3306" vertex="1">
+          <mxGeometry height="70" width="110" x="1175" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="iNjsMLeeS4e0NwZ715iP-2" edge="1" parent="1" source="rmq-sync-mod" style="endArrow=open;endFill=1;html=1;rounded=0;strokeColor=#6c8ebf;fontColor=#333333;edgeStyle=orthogonalEdgeStyle;entryX=0.5;entryY=1;entryDx=10;entryDy=0;entryPerimeter=0;exitX=0.054;exitY=0.899;exitDx=0;exitDy=0;exitPerimeter=0;" target="auth-box" value="">
+          <mxGeometry relative="1" x="-0.017" as="geometry">
+            <Array as="points">
+              <mxPoint x="1302.5" y="584.6" />
+              <mxPoint x="1302.5" y="600" />
+              <mxPoint x="785" y="600" />
+            </Array>
+            <mxPoint x="1470" y="95" as="sourcePoint" />
+            <mxPoint x="1230" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="user-db-mod" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;b&gt;user_db&lt;/b&gt;&lt;br&gt;MySQL 8.0&lt;br&gt;:3306" vertex="1">
+          <mxGeometry height="70" width="110" x="1175" y="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

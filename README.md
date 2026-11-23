@@ -1,260 +1,245 @@
-# Energy Management System
+# Energy Management System — Assignment 2
 
-A microservices-based Energy Management System built with Spring Boot, React, and Docker.
+Distributed Systems, 2026-2027  
+Asynchronous Communication with RabbitMQ
+
+---
 
 ## Architecture Overview
 
 ```
-Browser → NGINX:80 (API Gateway / Reverse Proxy)
-           ├── /auth/login     → auth-service:8082   (public)
-           ├── /auth/register  → auth-service:8082   (public)
-           ├── /auth/*         → auth-service:8082   (no JWT enforcement at gateway)
-           ├── /users          → user-service:8080   (JWT required)
-           └── /devices        → device-service:8081 (JWT required)
+Browser → NGINX :8888 (API Gateway / Reverse Proxy)
+           ├── /auth       → auth-service:8082     (public)
+           ├── /users      → user-service:8080     (JWT required)
+           ├── /devices    → device-service:8081   (JWT required)
+           └── /monitoring → monitoring-service:8083 (JWT required)
+
+Simulator (standalone JAR — not in Docker)
+    └── publishes <timestamp, device_id, measurement_value>
+           └── rabbitmq-data:5673  (device.data.exchange — FanoutExchange)
+                   └── monitoring-service consumes → HourlyConsumption DB
+
+user-service / device-service
+    └── publish sync events on user/device create
+           └── rabbitmq-sync:5672  (sync.exchange — FanoutExchange)
+                   ├── device-service consumes → UserReference DB
+                   └── monitoring-service consumes → DeviceReference DB
 ```
 
-| Component       | Technology              | Port  |
-|----------------|-------------------------|-------|
-| Frontend        | React 19 + TypeScript   | 80    |
-| auth-service    | Spring Boot 4.1.1       | 8082  |
-| user-service    | Spring Boot 4.1.1       | 8080  |
-| device-service  | Spring Boot 4.1.1       | 8081  |
-| auth-db         | MySQL 8.0               | 3309  |
-| user-db         | MySQL 8.0               | 3308  |
-| device-db       | MySQL 8.0               | 3307  |
+### Services
+
+| Container | Port | Description |
+|---|---|---|
+| reverse-proxy | 8888 | NGINX API Gateway |
+| auth-service | 8082 | JWT authentication |
+| user-service | 8080 | User management (ADMIN/CLIENT) |
+| device-service | 8081 | Device management + Swagger UI |
+| monitoring-service | 8083 | Hourly energy consumption aggregation |
+| rabbitmq-sync | 5672 / 15672 | Sync broker (user/device events) |
+| rabbitmq-data | 5673 / 15673 | Data broker (simulator measurements) |
+| user-db | 3308 | MySQL — user_db |
+| device-db | 3307 | MySQL — device_db |
+| auth-db | 3309 | MySQL — auth_db |
+| monitoring-db | 3310 | MySQL — monitoring_db |
+
+**Simulator** runs as a standalone JAR (not deployed in Docker).
 
 ---
 
 ## Prerequisites
 
-- **Docker Desktop** (includes Docker Compose) — required for the recommended setup
-- **Java 17** — required only for local development without Docker
-- **Node.js 18+** and **npm** — required only for local frontend development
+- **Docker Desktop** — required for the full stack
+- **Java 17+** — required for running the simulator locally
 
 ---
 
-## Running the Project
+## Build & Run
 
-### Option 1 — Full Stack via Docker Compose (Recommended)
-
-This is the easiest way to run the entire system. All services, databases, and the frontend are built and started together.
+### Full stack via Docker Compose
 
 ```bash
 docker-compose up --build
 ```
 
-Access the application at **http://localhost**
+Frontend available at: `http://localhost:8888`
 
-To stop all services:
+RabbitMQ management consoles:
+- Sync broker: `http://localhost:15672` (guest / guest)
+- Data broker: `http://localhost:15673` (guest / guest)
+
 ```bash
-docker-compose down
+docker-compose down        # stop
+docker-compose down -v     # stop + remove DB volumes (full reset)
 ```
-
-To stop and remove database volumes (full reset):
-```bash
-docker-compose down -v
-```
-
-### Option 2 — Local Development (Databases via Docker, Services Locally)
-
-Use this when you want hot-reload on Java services or the frontend.
-
-**Step 1 — Start only the databases:**
-```bash
-docker-compose up user-db device-db auth-db
-```
-
-**Step 2 — Run each Java service** (from its own directory):
-```bash
-# Auth Service
-cd auth-service
-./mvnw spring-boot:run
-
-# User Service (new terminal)
-cd user-service
-./mvnw spring-boot:run
-
-# Device Service (new terminal)
-cd device-service
-./mvnw spring-boot:run
-```
-
-**Step 3 — Run the frontend** (new terminal, from `frontend/`):
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend dev server runs at **http://localhost:5173**
-
-> On Windows, use `mvnw.cmd` instead of `./mvnw`.
 
 ---
 
-## Build Commands
+## Running the Simulator
 
-### Java Services
+The simulator is a standalone Spring Boot JAR — it is **not** part of the Docker Compose stack.
 
-Run these from the service directory (`auth-service/`, `user-service/`, or `device-service/`).
-
-```bash
-# Build a production JAR (required before building the Docker image manually)
-./mvnw clean package
-
-# Run tests
-./mvnw test
-
-# Run a single test class
-./mvnw test -Dtest=ClassName
-```
-
-> The Dockerfiles expect the JAR to be present at `target/*.jar`. Always run `./mvnw clean package` before building images manually.
-
-### Frontend
-
-Run these from the `frontend/` directory.
+### Build the JAR (no local Maven needed)
 
 ```bash
-npm run dev      # Start development server with HMR (http://localhost:5173)
-npm run build    # Type-check + production build (output in dist/)
-npm run lint     # Run oxlint
-npm run preview  # Preview the production build locally
+# From the simulator/ directory:
+docker run --rm -v "%CD%:/app" -w //app maven:3.9-eclipse-temurin-17-alpine mvn package -DskipTests -q
 ```
+
+JAR output: `simulator/target/simulator-0.0.1-SNAPSHOT.jar`
+
+### Run modes
+
+**Backfill a full day for a specific device (exits when done):**
+```bash
+java -jar simulator/target/simulator-0.0.1-SNAPSHOT.jar ^
+  --simulator.device-ids=<device-uuid> ^
+  --date=2026-11-23
+```
+
+**Backfill for multiple devices:**
+```bash
+java -jar simulator/target/simulator-0.0.1-SNAPSHOT.jar ^
+  --simulator.device-ids=uuid1,uuid2,uuid3 ^
+  --date=2026-11-23
+```
+
+**Backfill all devices (fetched automatically from device-service):**
+```bash
+java -jar simulator/target/simulator-0.0.1-SNAPSHOT.jar --date=2026-11-23
+```
+
+**Run continuously — sends one measurement per device every 10 minutes:**
+```bash
+java -jar simulator/target/simulator-0.0.1-SNAPSHOT.jar --simulator.device-ids=<device-uuid>
+```
+
+> The simulator connects to `rabbitmq-data` on `localhost:5673`. The Docker stack must be running first.
+
+### Finding device IDs
+
+Open Swagger UI at `http://localhost:8081/swagger-ui.html` → `GET /devices` → Execute.
+
+---
+
+## Demo Flow
+
+1. `docker-compose up --build`
+2. Open `http://localhost:8888`, log in as `admin` / `admin123`
+3. Create a user and a device via the UI
+4. Copy the device ID from Swagger (`http://localhost:8081/swagger-ui.html`)
+5. Run the simulator:
+   ```bash
+   java -jar simulator/target/simulator-0.0.1-SNAPSHOT.jar --simulator.device-ids=<uuid> --date=2026-11-23
+   ```
+6. Log in as the CLIENT user who owns that device
+7. Navigate to **Energy** tab → select the date → view the hourly bar chart
+
+---
+
+## Message Broker Design
+
+Two separate RabbitMQ instances, both using **Publish-Subscribe (FanoutExchange)**:
+
+**rabbitmq-sync** (port 5672) — synchronization events:
+- Exchange: `sync.exchange` (FanoutExchange)
+- Publishers: user-service (USER created), device-service (DEVICE created/updated)
+- Consumers:
+  - `sync.queue.device-service` → device-service stores `UserReference`
+  - `sync.queue.monitoring-service` → monitoring-service stores `DeviceReference`
+
+**rabbitmq-data** (port 5673) — sensor measurements:
+- Exchange: `device.data.exchange` (FanoutExchange)
+- Publisher: simulator `<timestamp, device_id, measurement_value>`
+- Consumer: `device.data.queue` → monitoring-service aggregates into hourly totals
 
 ---
 
 ## Default Credentials
 
-A single admin account is seeded on first startup in both `auth_db` and `user_db`:
+| Username | Password | Role |
+|---|---|---|
+| `admin` | `admin123` | ADMIN |
 
-| Username | Password   | Role  |
-|----------|------------|-------|
-| `admin`  | `admin123` | ADMIN |
-
-> Self-registration via `/auth/register` creates `CLIENT` accounts only. Admin registration is blocked server-side.
+> Self-registration via `/auth/register` creates CLIENT accounts only. ADMIN registration is blocked server-side.
 
 ---
 
 ## API Endpoints
 
-### Auth Service (public, no JWT required for login/register)
+### Auth Service (public)
 
-| Method | Path              | Description                  |
-|--------|-------------------|------------------------------|
-| POST   | `/auth/register`  | Register a new CLIENT account |
-| POST   | `/auth/login`     | Login and receive a JWT token |
-| GET    | `/auth/validate`  | Validate a JWT (used internally by NGINX) |
+| Method | Path | Description |
+|---|---|---|
+| POST | `/auth/register` | Register a CLIENT account |
+| POST | `/auth/login` | Login, receive JWT |
+| GET | `/auth/validate` | Validate JWT (used internally by NGINX) |
 
 ### User Service (JWT required)
 
-| Method | Path           | Description               |
-|--------|----------------|---------------------------|
-| GET    | `/users`       | List all users (ADMIN)    |
-| GET    | `/users/{id}`  | Get user by ID            |
-| POST   | `/users`       | Create user (ADMIN)       |
-| PUT    | `/users/{id}`  | Update user (ADMIN)       |
-| DELETE | `/users/{id}`  | Delete user (ADMIN)       |
+| Method | Path | Description |
+|---|---|---|
+| GET | `/users` | List all users (ADMIN) |
+| GET | `/users/{id}` | Get user by ID |
+| GET | `/users/by-username/{username}` | Get user by username |
+| POST | `/users` | Create user (ADMIN) |
+| PUT | `/users/{id}` | Update user (ADMIN) |
+| DELETE | `/users/{id}` | Delete user (ADMIN) |
 
-Swagger UI: **http://localhost:8080/swagger-ui.html**
+Swagger: `http://localhost:8080/swagger-ui.html`
 
 ### Device Service (JWT required)
 
-| Method | Path              | Description                  |
-|--------|-------------------|------------------------------|
-| GET    | `/devices`        | List all devices (ADMIN)     |
-| GET    | `/devices/{id}`   | Get device by ID             |
-| POST   | `/devices`        | Create device (ADMIN)        |
-| PUT    | `/devices/{id}`   | Update device (ADMIN)        |
-| DELETE | `/devices/{id}`   | Delete device (ADMIN)        |
+| Method | Path | Description |
+|---|---|---|
+| GET | `/devices` | List all devices (ADMIN) |
+| GET | `/devices/{id}` | Get device by ID |
+| GET | `/devices/user/{userId}` | Get devices for a user |
+| POST | `/devices` | Create device (ADMIN) |
+| PUT | `/devices/{id}` | Update device (ADMIN) |
+| DELETE | `/devices/{id}` | Delete device (ADMIN) |
 
-Swagger UI: **http://localhost:8081/swagger-ui.html**
+Swagger: `http://localhost:8081/swagger-ui.html`
+
+### Monitoring Service (JWT required)
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/monitoring/user/{userId}?date=YYYY-MM-DD` | Hourly consumption for all user devices |
+| GET | `/monitoring/device/{deviceId}?date=YYYY-MM-DD` | Hourly consumption for one device |
 
 ---
 
 ## JWT Authentication Flow
 
-1. POST to `/auth/login` with credentials → receive a JWT (10-hour expiry).
-2. Include the token in subsequent requests: `Authorization: Bearer <token>`.
-3. NGINX validates the token for `/users` and `/devices` routes via an internal subrequest to `/auth/validate`.
-4. The JWT contains the username and role (`ADMIN` or `CLIENT`).
-
----
-
-## Configuration
-
-### Environment Variables
-
-All services read configuration from environment variables, with sensible local-development defaults.
-
-**auth-service**
-
-| Variable     | Default                             | Description         |
-|--------------|-------------------------------------|---------------------|
-| `SERVER_PORT`| `8082`                              | Service port        |
-| `DB_IP`      | `localhost`                         | Database host       |
-| `DB_PORT`    | `3306`                              | Database port       |
-| `DB_DBNAME`  | `auth_db`                           | Database name       |
-| `DB_USER`    | `root`                              | Database user       |
-| `DB_PASSWORD`| `root`                              | Database password   |
-| `JWT_SECRET` | `3f8a2b1c4d5e...` (default insecure)| JWT signing secret  |
-
-**user-service**
-
-| Variable            | Default                        | Description               |
-|---------------------|--------------------------------|---------------------------|
-| `SERVER_PORT`       | `8080`                         | Service port              |
-| `DB_IP`             | `localhost`                    | Database host             |
-| `DB_PORT`           | `3306`                         | Database port             |
-| `DB_DBNAME`         | `user_db`                      | Database name             |
-| `DB_USER`           | `root`                         | Database user             |
-| `DB_PASSWORD`       | *(empty)*                      | Database password         |
-| `DEVICE_SERVICE_URL`| `http://device-service:8081`   | Device service base URL   |
-| `AUTH_SERVICE_URL`  | `http://auth-service:8082`     | Auth service base URL     |
-
-**device-service**
-
-| Variable     | Default     | Description       |
-|--------------|-------------|-------------------|
-| `SERVER_PORT`| `8081`      | Service port      |
-| `DB_IP`      | `localhost` | Database host     |
-| `DB_PORT`    | `3306`      | Database port     |
-| `DB_DBNAME`  | `device_db` | Database name     |
-| `DB_USER`    | `root`      | Database user     |
-| `DB_PASSWORD`| *(empty)*   | Database password |
-
----
-
-## Inter-Service Communication
-
-- **User Service → Device Service**: when a user is created, the user ID is synced to the Device Service (`POST /devices/sync-user`). On user deletion, devices are cascade-deleted (`DELETE /devices/user/{id}`).
-- The Device Service maintains a `UserReference` table. A device cannot reference a user that has not been synced.
-
----
-
-## Database Ports (Host Machine)
-
-When running with Docker Compose, the databases are exposed on the host for direct access (e.g., via a DB client):
-
-| Database   | Host Port |
-|------------|-----------|
-| `auth_db`  | 3309      |
-| `device_db`| 3307      |
-| `user_db`  | 3308      |
-
-Connection string example: `jdbc:mysql://localhost:3308/user_db` (user: `root`, password: `root`)
+1. POST `/auth/login` → receive JWT (10h expiry, contains username + role)
+2. Frontend stores JWT in `localStorage`, Axios injects `Authorization: Bearer` header
+3. NGINX validates token for `/users`, `/devices`, `/monitoring` via internal subrequest to `/auth/validate`
+4. Roles: `ADMIN` (full CRUD) | `CLIENT` (view own devices and energy chart)
 
 ---
 
 ## Project Structure
 
 ```
-Assignment-1/
-├── auth-service/        # Spring Boot — authentication & JWT issuance
-├── user-service/        # Spring Boot — user management
-├── device-service/      # Spring Boot — device management
-├── frontend/            # React 19 + TypeScript + Vite
-├── DiagramaDeDeplyment/ # Deployment diagram (draw.io)
-├── docker-compose.yml   # Orchestrates all services and databases
-└── nginx.conf           # API gateway routing and JWT validation
+├── auth-service/         Spring Boot — JWT authentication
+├── user-service/         Spring Boot — user management
+├── device-service/       Spring Boot — device management
+├── monitoring-service/   Spring Boot — energy aggregation consumer
+├── simulator/            Spring Boot standalone JAR — data producer
+├── frontend/             React 19 + TypeScript + MUI
+├── A2/                   Deployment diagram + assignment PDF
+├── docker-compose.yml
+├── nginx.conf
+└── README.md
 ```
+
+---
+
+## Database Ports (host machine)
+
+| Database | Host Port |
+|---|---|
+| auth_db | 3309 |
+| user_db | 3308 |
+| device_db | 3307 |
+| monitoring_db | 3310 |
