@@ -38,7 +38,6 @@ public class SyncPublisher {
             String json = objectMapper.writeValueAsString(message);
             rabbitTemplate.convertAndSend(syncExchange, "", json);
         } catch (JsonProcessingException e) {
-            // serialization failure — skip
         }
     }
 }

@@ -34,7 +34,6 @@ public class SyncConsumer {
                 }
             }
         } catch (Exception e) {
-            // malformed message — skip
         }
     }
 }
